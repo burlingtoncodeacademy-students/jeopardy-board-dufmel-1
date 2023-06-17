@@ -11,7 +11,7 @@ let roundTwoBtn = document.getElementById("round-two-btn")
 
 guessBtn.disabled = true
 passBtn.disabled = false
-roundTwoBtn.disabled = false
+// roundTwoBtn.disabled = false
 
 //player objects 
 let displayPlayer = document.getElementById("display-player")
@@ -45,11 +45,17 @@ const Players = {
             {currentPlayer = this.player1;
             displayPlayer.textContent = "Player One";
         }
-}
+    },
+
+    addPoints(points){
+        return currentPlayer.points += points
+    }
 }
 let currentPlayer = Players.player1
 
-console.log(currentPlayer.player)
+// console.log(Players.addPoints(200))
+
+// console.log(currentPlayer.player)
 
 passBtn.addEventListener("click", (e) => {
     e.preventDefault()
@@ -69,79 +75,87 @@ if (currentPlayer = Players.player1){
 
 //***************Begin Play*******************/
 
+let category = document.getElementsByClassName("category-header")
+let natureCategory = document.getElementById("nature-category")
+let animalCategory = document.getElementById("animal-category")
+let nature = document.getElementsByClassName("nature")
+let animal = document.getElementsByClassName("animal")
 let card = document.getElementsByClassName("card")
 let input = document.getElementById("user-input")
+let modal = document.getElementById("myModal");
 let cardSelected = false
-// let answer
+
+//Add questions from placeholder questions to array by category
+
+let natureArray=placeholderQuestions.filter((obj) => obj.category === "Nature")
+let animalArray = placeholderQuestions.filter((obj) => obj.category === "Animals")
+let categorySelection
+console.log(animalArray)
 
 //**************************************www.toptal.com/javascript/10-most-common-javascript-mistakes*****************************************/
-
-
-// let elements = card
-// let n = elements.length; // Assume we have 10 elements for this example
-// let makeHandler = function (num) {
-//   // Outer function
-//   return function () {
-//     // Inner function
-//     let possiblePoints = Number(card[num].innerHTML);
-//     console.log(possiblePoints)
-//   };
-// };
-// for (let i = 0; i < n; i++) {
-//   elements[i].onclick = makeHandler(i);
-// }
-
-
-
-
-
-
-
-
-
-//*************************First Try for Code******************************** */
 let answer = []
 let possiblePoints = []
-for (let i = 0; i < card.length; i++){
+
+
+for (let i = 0; i < category.lenth; i++){
+    category.textContent = placeholderQuestions.category.value
+}
+
+
+//*************************Nature Questions******************************** */
+
+let makeHandler = function (num) {
+  // Outer function
     
-    card[i].addEventListener("click", (e) => {
-        //captures point value of selected question and parses to number
-        possiblePoints.push(card[i].innerHTML)
-        if (!cardSelected){ // set to false will allow user to select a card
+    return function () {
+    // Inner function
+
+            //Clear answer and possiblePoints arrays
+            answer.length > 0 ? answer.pop() : null
+            possiblePoints.length > 0 ? possiblePoints.pop() : null
+            if (!cardSelected){ // set to false will allow user to select a card
+            card[num].onclick = function () {
+            modal.style.display = "block";
+            };
+
+            //captures point value of selected question and parses to number
+            possiblePoints.push(nature[num].innerHTML)
 
             //will loop through each question in relationships to the card selected
-        card[i].textContent = placeholderQuestions[i].question;
-        answer.push(placeholderQuestions[i].answer)
+            nature[num].textContent = animalArray[num].question;
+            answer.push(animalArray[num].answer)
 
-          //new cards can't be selected until either guess or pass buttons are clicked. They can now enabled
-        // cardSelected = true;
-        guessBtn.disabled = false;
-        passBtn.disabled = false;
+            //new cards can't be selected until either guess or pass buttons are clicked. They can now enabled
+            // cardSelected = true;
+            guessBtn.disabled = false;
+            passBtn.disabled = false;
+            }}
+};
 
-          //will loop through each answer and be the same as the corresponding card
-        }})
-    }    
+for (let i = 0; i < nature.length; i++) {
+    nature[i].onclick = makeHandler(i);
+}
+
+//*************************Animal Questions******************************** */
+
+//MODAL
+
+card.onclick = function openModal(){
+    modal.style.display = block
+}
+
 
     guessBtn.addEventListener("click", e =>{
             e.preventDefault()
-            possiblePoints = possiblePoints.toString()
-            console.log(answer.toString())
-            console.log(typeof Number(possiblePoints))
-            if(answer === input.value){
-            return currentPlayer.points += Number(possiblePoints)
+            let pointValue = possiblePoints.toString()
 
-        }
-        console.log(typeof currentPlayer.points)
+            if(answer.includes(input.value)){
+                Players.addPoints(Number(pointValue))
+                console.log(currentPlayer.points);
+            }
         input.value = ""
     })
+    
+    
+ 
 
-console.log(answer)
-
-// for (let i = 0; i < placeholderQuestions.length; i++){
-// guessBtn.addEventListener("click", e =>{
-//     console.log(placeholderQuestions[i].answer)
-//     console.log(input)
-//     console.log(placeholderQuestions[i].answer === input)
-//     cardSelected = false
-// })
-// }
