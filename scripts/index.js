@@ -87,6 +87,9 @@ const Players = {
         let natureCategory = document.getElementById("nature-category")
         let nature = document.getElementsByClassName("nature")
         let animal = document.getElementsByClassName("animal")
+        let computers = document.getElementsByClassName("computers")
+        let myth = document.getElementsByClassName("mythology")
+        let geeral = document.getElementsByClassName("general")
         let card = document.getElementsByClassName("card")
         let input = document.getElementById("user-input")
         let modal = document.getElementById("myModal");
@@ -96,6 +99,10 @@ const Players = {
         
 let natureArray=placeholderQuestions.filter((obj) => obj.category === "Nature")
 let animalArray = placeholderQuestions.filter((obj) => obj.category === "Animals")
+let computerArray = placeholderQuestions.filter((obj) => obj.category === "Computers")
+let mythArray = placeholderQuestions.filter((obj) => obj.category === "Mythology");
+let historyArray = placeholderQuestions.filter((obj) => obj.category === "History");
+let generalArray = placeholderQuestions.filter((obj) => obj.category === "General");
 
 
 
@@ -107,42 +114,46 @@ let answer = []
 let possiblePoints = []
 let temporaryArray = []
 let currentCard = []
+let currentCategory = []
+let clickedElement = null
 
-for (let i = 0; i < category.lenth; i++){
-    category.textContent = placeholderQuestions.category.value
-}
 
 //REMOVE RANDOM ITEM FROM ARRAY
 
 
-function flipOver(cardIndex){
+function flipOver(dataArray, elementArray){
 
     return function()
 {       
         //checks answer and possiblePoints array and removes items
         currentCard.length > 0 ? currentCard.pop() : null
+        currentCategory.length > 0 ? currentCategory.pop() : null
         answer.length > 0 ? answer.pop() : null
         possiblePoints.length > 0 ? possiblePoints.pop() : null
         temporaryArray.length > 0 ? temporaryArray.pop() : null
 
         if (!cardSelected){ // set to false will allow user to select a card
-        console.log(natureArray.length)
+        const cardIndex = Array.from(elementArray).indexOf(this)
+        clickedElement = this
+        console.log(clickedElement)
         currentCard.push(cardIndex)
         console.log(currentCard)
         
         //Generates random number in order to splice object from array and temporarily store in temporaryArray. This will ensure that the user does not get the same question twice and that the game can be played with different questions each time.
-        const num = Math.floor(Math.random() * natureArray.length)
-        temporaryArray = natureArray.splice(num, 1)[0]
+        const num = Math.floor(Math.random() * dataArray.length)
+        temporaryArray = dataArray.splice(num, 1)[0]
         console.log(num)
         console.log(temporaryArray)
-        console.log(natureArray.length)
+        console.log(dataArray.length)
 
         //Uses information from card paramater
-        possiblePoints.push(nature[cardIndex].innerHTML)
+        possiblePoints.push(elementArray[cardIndex].innerHTML)
         console.log(possiblePoints)
         
         
-        nature[cardIndex].textContent = temporaryArray.question;
+        elementArray[cardIndex].textContent = temporaryArray.question;
+        currentCategory.push(temporaryArray.category)
+        console.log(currentCategory)
         answer.push(temporaryArray.answer)
     
         //new cards can't be selected until either guess or pass buttons are clicked. They can now enabled
@@ -152,43 +163,17 @@ function flipOver(cardIndex){
 }}}
 
 
-//Grabs the index of the selected card which is called in the flipOver function as an argument
-for (let i = 0; i < nature.length; i++) {
-    nature[i].onclick = flipOver(i);
+//Function to handle click on span elements
+function handleClick(elementArray, dataArray){
+    for (let i = 0; i < elementArray.length; i++){
+    elementArray[i].onclick=flipOver(dataArray, elementArray)
+}
 }
 
+handleClick(nature, natureArray)
+handleClick(animal, animalArray)
 
 
-//*************************Nature Questions******************************** */
-
-// let makeHandler = function (num) {
-//   // Outer function
-    
-//     return function () {
-//     // Inner function
-
-//             //Clear answer and possiblePoints arrays
-//             answer.length > 0 ? answer.pop() : null
-//             possiblePoints.length > 0 ? possiblePoints.pop() : null
-//             if (!cardSelected){ // set to false will allow user to select a card
-
-//             //captures point value of selected question and parses to number
-//             possiblePoints.push(nature[num].innerHTML)
-
-//             //will loop through each question in relationships to the card selected
-//             nature[num].textContent = natureArray[num].question;
-//             answer.push(natureArray[num].answer)
-
-//             //new cards can't be selected until either guess or pass buttons are clicked. They can now enabled
-//             // cardSelected = true;
-//             guessBtn.disabled = false;
-//             passBtn.disabled = false;
-//             }}
-// };
-
-// for (let i = 0; i < nature.length; i++) {
-//     nature[i].onclick = makeHandler(i);
-// }
 
 //*************************Animal Questions******************************** */
 let player1Score = document.getElementById("player-1-score")
@@ -197,24 +182,29 @@ let player2Score = document.getElementById("player-2-score")
 
 let attempts = 0
 
-
+function clearText(){
+    if(clickedElement){
+        clickedElement.textContent = ""
+    }
+}
 
     guessBtn.addEventListener("click", e =>{
             e.preventDefault()
             let pointValue = possiblePoints.toString()
-            let cardIndex = Number(currentCard.toString())
             console.log(answer)
             console.log(pointValue)
-            console.log(cardIndex)
+            // console.log(cardIndex)
             if(attempts === 1){
-                card[cardIndex].textContent = " "
+                clearText()
                 guessBtn.disabled = true
                 cardSelected = false
+                attempts = 0
             } else if(answer.includes(input.value)){
                 Players.addPoints(Number(pointValue))
                 console.log(currentPlayer.points);
                 player1Score.textContent = `Player 1 Score: ${Players.player1.points}`
                 player2Score.textContent = `Player 2 Score: ${Players.player2.points}`
+                clearText()
                 guessBtn.disabled = true
                 cardSelected = false
             } else if (!answer.includes(input.value)){
@@ -226,6 +216,6 @@ let attempts = 0
                 console.log(attempts)
             }
             
-            })
-
+        })
+        
         

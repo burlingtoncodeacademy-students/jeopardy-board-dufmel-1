@@ -120,6 +120,17 @@ span {
     box-shadow:  3px 3px 5px 0px black;
 }
 
+.card {
+    background-color: #090979;
+    border: .5px solid black;
+    border-radius: 3px;
+    color:#eeff00;
+    width: 140px;
+    padding: 1em 0;
+    box-shadow:  3px 3px 5px 0px black;
+}
+
+
 span:hover {
     transform: scale(1.1);
     opacity: 80%;
