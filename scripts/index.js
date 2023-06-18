@@ -129,11 +129,11 @@ function flipOver(dataArray, elementArray){
         answer.length > 0 ? answer.pop() : null
         possiblePoints.length > 0 ? possiblePoints.pop() : null
         temporaryArray.length > 0 ? temporaryArray.pop() : null
-
-        if (!cardSelected){ // set to false will allow user to select a card
-        const cardIndex = Array.from(elementArray).indexOf(this)
         clickedElement = this
         console.log(clickedElement)
+
+        if (!cardSelected && clickedElement.textContent !== ""){ // set to false will allow user to select a card
+        const cardIndex = Array.from(elementArray).indexOf(this)
         currentCard.push(cardIndex)
         console.log(currentCard)
         
@@ -187,6 +187,7 @@ let attempts = 0
 function clearText(){
     if(clickedElement){
         clickedElement.textContent = ""
+        attempts = 0
     }
 }
 
@@ -214,6 +215,8 @@ function clearText(){
               attempts++;
               console.log(attempts);
               clearText()
+                guessBtn.disabled = true;
+               cardSelected = false;
             } else if (!answer.includes(input.value.toLowerCase())) {
               Players.subtractPoints(pointValue);
               Players.changePlayers(currentPlayer);
