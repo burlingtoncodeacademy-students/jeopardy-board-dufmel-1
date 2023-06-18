@@ -82,14 +82,12 @@ const Players = {
         
         //***************Begin Play*******************/
         
-        let category = document.getElementsByClassName("category-header")
-        let animalCategory = document.getElementById("animal-category")
-        let natureCategory = document.getElementById("nature-category")
         let nature = document.getElementsByClassName("nature")
         let animal = document.getElementsByClassName("animal")
         let computers = document.getElementsByClassName("computers")
         let myth = document.getElementsByClassName("mythology")
-        let geeral = document.getElementsByClassName("general")
+        let history = document.getElementsByClassName("history")
+        let general = document.getElementsByClassName("general")
         let card = document.getElementsByClassName("card")
         let input = document.getElementById("user-input")
         let modal = document.getElementById("myModal");
@@ -154,7 +152,7 @@ function flipOver(dataArray, elementArray){
         elementArray[cardIndex].textContent = temporaryArray.question;
         currentCategory.push(temporaryArray.category)
         console.log(currentCategory)
-        answer.push(temporaryArray.answer)
+        answer.push(temporaryArray.answer.toLowerCase())
     
         //new cards can't be selected until either guess or pass buttons are clicked. They can now enabled
         cardSelected = true;
@@ -172,6 +170,10 @@ function handleClick(elementArray, dataArray){
 
 handleClick(nature, natureArray)
 handleClick(animal, animalArray)
+handleClick(computers, computerArray)
+handleClick(myth, mythArray)
+handleClick(history, historyArray)
+handleClick(general, generalArray)
 
 
 
@@ -194,26 +196,32 @@ function clearText(){
             console.log(answer)
             console.log(pointValue)
             // console.log(cardIndex)
-            if(attempts === 1){
-                clearText()
-                guessBtn.disabled = true
-                cardSelected = false
-                attempts = 0
-            } else if(answer.includes(input.value)){
-                Players.addPoints(Number(pointValue))
-                console.log(currentPlayer.points);
-                player1Score.textContent = `Player 1 Score: ${Players.player1.points}`
-                player2Score.textContent = `Player 2 Score: ${Players.player2.points}`
-                clearText()
-                guessBtn.disabled = true
-                cardSelected = false
-            } else if (!answer.includes(input.value)){
-                Players.subtractPoints(pointValue)
-                Players.changePlayers(currentPlayer)
-                player1Score.textContent = `Player 1 Score: ${Players.player1.points}`;
-                player2Score.textContent = `Player 2 Score: ${Players.player2.points}`;
-                attempts ++
-                console.log(attempts)
+             if (answer.includes(input.value.toLowerCase())) {
+              Players.addPoints(Number(pointValue));
+              console.log(currentPlayer.points);
+              player1Score.textContent = `Player 1 Score: ${Players.player1.points}`;
+              player2Score.textContent = `Player 2 Score: ${Players.player2.points}`;
+              clearText();
+              guessBtn.disabled = true;
+              cardSelected = false;
+              input.value = "";
+            } else if (!answer.includes(input.value.toLowerCase()) && attempts === 1) {
+              Players.subtractPoints(pointValue);
+              Players.changePlayers(currentPlayer);
+              player1Score.textContent = `Player 1 Score: ${Players.player1.points}`;
+              player2Score.textContent = `Player 2 Score: ${Players.player2.points}`;
+              input.value = "";
+              attempts++;
+              console.log(attempts);
+              clearText()
+            } else if (!answer.includes(input.value.toLowerCase())) {
+              Players.subtractPoints(pointValue);
+              Players.changePlayers(currentPlayer);
+              player1Score.textContent = `Player 1 Score: ${Players.player1.points}`;
+              player2Score.textContent = `Player 2 Score: ${Players.player2.points}`;
+              input.value = "";
+              attempts++;
+              console.log(attempts);
             }
             
         })
