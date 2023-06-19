@@ -3,17 +3,24 @@ import placeholderQuestions from "./placeholder-questions.js";
 console.log({ placeholderQuestions });
 
 
-
-
+    let params = new URLSearchParams(window.location.search)
+    //
+    let playerOneName = params.get("nameOne")
+    let playerTwoName = params.get("nameTwo")
+    let playerOneScore = params.get("scoreOne")
+    let playerTwoScore = params.get("scoreTwo")
+    
+    
 //****************ROUND ONE JS****************************/
 
 //Button Set-up
 let guessBtn = document.getElementById("guess-btn")
 let passBtn = document.getElementById("pass-btn")
-let roundTwoBtn = document.getElementById("next-round-btn")
+let roundTwoBtn = document.getElementById("round-two-btn")
+let finalRoundBtn = document.getElementById("final-round-btn")
 
 guessBtn.disabled = true
-passBtn.disabled = false
+passBtn.disabled = true
 roundTwoBtn.disabled = false
 
 //player objects 
@@ -30,53 +37,42 @@ class Player {
 //Dictionary of Players will give easy access to players and their properties
 const Players = {
     player1: new Player(
-        "player1",
-        0
+        playerOneName,
+        Number(playerOneScore)
         ),
         
-        player2: new Player(
-            "player2",
-            0
-            ),
+    player2: new Player(
+        playerTwoName,
+        Number(playerTwoScore)
+        ),
             
-            changePlayers (p) {
-                if (p === this.player1){
-                    currentPlayer = this.player2;
-                    displayPlayer.textContent = "Player Two";
+    changePlayers (p) {
+        if (p === this.player1){
+            currentPlayer = this.player2;
+            displayPlayer.textContent = `${playerTwoName}'s Turn`;
                     
-                }else if (p === this.player2)
-                {currentPlayer = this.player1;
-                    displayPlayer.textContent = "Player One";
-                }
-            },
-            
-            addPoints(points){
-                return currentPlayer.points += points
-            },
-            
-            subtractPoints(points){
-                return currentPlayer.points -= points
+            }else if (p === this.player2)
+            {currentPlayer = this.player1;
+            displayPlayer.textContent = `${playerOneName}'s Turn`
             }
-        }
+    },
+            
+    addPoints(points){
+        return currentPlayer.points += points
+    },
+            
+    subtractPoints(points){
+        return currentPlayer.points -= points
+    }
+}
+        console.log(Players)
         let currentPlayer = Players.player1
         
-        // console.log(Players.addPoints(200))
-        
-        // console.log(currentPlayer.player)
-        
-        passBtn.addEventListener("click", (e) => {
-            e.preventDefault()
-            if (!passBtn.disabled) {
-                console.log(currentPlayer)
-                Players.changePlayers(currentPlayer);
-                console.log(currentPlayer);
-            }
-        });
-        
+
         if (currentPlayer = Players.player1){
-            displayPlayer.textContent = "Player One"
+            displayPlayer.textContent = `${playerOneName}'s Turn`
         } else {
-            displayPlayer.textContent = "Player Two"
+            displayPlayer.textContent = `${playerTwoName}'s Turn`;
         }
         
         
@@ -89,6 +85,7 @@ const Players = {
         let history = document.getElementsByClassName("history")
         let general = document.getElementsByClassName("general")
         let card = document.getElementsByClassName("card")
+        let card2 = document.getElementsByClassName("card2")
         let input = document.getElementById("user-input")
         let modal = document.getElementById("myModal");
         let cardSelected = false
@@ -168,6 +165,7 @@ function handleClick(elementArray, dataArray){
 }
 }
 
+//Arguments passed for each category
 handleClick(nature, natureArray)
 handleClick(animal, animalArray)
 handleClick(computers, computerArray)
@@ -177,12 +175,31 @@ handleClick(general, generalArray)
 
 
 
-//*************************Animal Questions******************************** */
+let attempts = 0
+//Pass Button Functions
+//Increases attempts so that only the new player has a chance
+
+passBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (attempts === 1){ 
+    passBtn.disabled=true
+    guessBtn.disabled=true
+    clearText()}
+
+    console.log(currentPlayer);
+    Players.changePlayers(currentPlayer);
+    console.log(currentPlayer);
+    attempts++
+});
+
+
+//Guess Button Functions
 let player1Score = document.getElementById("player-1-score")
 let player2Score = document.getElementById("player-2-score")
 
+player1Score.textContent = `${playerOneName}'s Score: ${playerOneScore}`
+player2Score.textContent = `${playerTwoName}'s Score: ${playerTwoScore}`;
 
-let attempts = 0
 
 function clearText(){
     if(clickedElement){
@@ -196,37 +213,43 @@ function clearText(){
             let pointValue = possiblePoints.toString()
             console.log(answer)
             console.log(pointValue)
-            // console.log(cardIndex)
-             if (answer.includes(input.value.toLowerCase())) {
-              Players.addPoints(Number(pointValue));
-              console.log(currentPlayer.points);
-              player1Score.textContent = `Player 1 Score: ${Players.player1.points}`;
-              player2Score.textContent = `Player 2 Score: ${Players.player2.points}`;
-              clearText();
-              guessBtn.disabled = true;
-              cardSelected = false;
-              input.value = "";
-            } else if (!answer.includes(input.value.toLowerCase()) && attempts === 1) {
-              Players.subtractPoints(pointValue);
-              Players.changePlayers(currentPlayer);
-              player1Score.textContent = `Player 1 Score: ${Players.player1.points}`;
-              player2Score.textContent = `Player 2 Score: ${Players.player2.points}`;
-              input.value = "";
-              attempts++;
-              console.log(attempts);
-              clearText()
+            
+            if (answer.includes(input.value.toLowerCase())) {
+                Players.addPoints(Number(pointValue));
+                console.log(currentPlayer.points);
+                clearText();
                 guessBtn.disabled = true;
-               cardSelected = false;
+                cardSelected = false;
+                input.value = "";
+            } else if (!answer.includes(input.value.toLowerCase()) && attempts === 1) {
+                Players.subtractPoints(pointValue);
+                Players.changePlayers(currentPlayer);
+                input.value = "";
+                attempts++;
+                console.log(attempts);
+                clearText()
+                guessBtn.disabled = true;
+                cardSelected = false;
             } else if (!answer.includes(input.value.toLowerCase())) {
-              Players.subtractPoints(pointValue);
-              Players.changePlayers(currentPlayer);
-              player1Score.textContent = `Player 1 Score: ${Players.player1.points}`;
-              player2Score.textContent = `Player 2 Score: ${Players.player2.points}`;
-              input.value = "";
-              attempts++;
-              console.log(attempts);
+                Players.subtractPoints(pointValue);
+                Players.changePlayers(currentPlayer);
+                player1Score.textContent = `Player 1 Score: ${Players.player1.points}`;
+                player2Score.textContent = `Player 2 Score: ${Players.player2.points}`;
+                input.value = "";
+                attempts++;
+                console.log(attempts);
             }
             
         })
+
         
-        
+
+        roundTwoBtn.addEventListener("click", e =>{
+            e.preventDefault()
+            window.location = `http://localhost:5500/round-2.html?nameOne=${Players.player1.player}&nameTwo=${Players.player2.player}&scoreOne=${Players.player1.points}&scoreTwo=${Players.player2.points}`;
+        })
+
+        finalRoundBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.location = `http://localhost:5500/final-jeopardy.html?nameOne=${Players.player1.player}&nameTwo=${Players.player2.player}&scoreOne=${Players.player1.points}&scoreTwo=${Players.player2.points}`;
+        });

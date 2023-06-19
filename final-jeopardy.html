@@ -10,24 +10,23 @@
   <body>
     <div class="main-container">
       <h1>FINAL JEOPARDY</h1>
-      <h2>Player Turn</h2>
+      <h2 id="display-player">Player Turn</h2>
 
       <div class="final-category">Final Category</div>
-      <div class="final-question">Final Question</div>
+      <div  class="final-question" id="final-question">Final Question</div>
       
       <div class="bet-div">
         <input type="text" placeholder="Point bet amount" id="bet-input">
         <input type="text" placeholder="Final answer" id="final-answer-input">
         <button id="bet-btn">BET</button>
-        <button id="timer-btn" onclick="audio.play()">TIMER</button>
+        <button id="answer-btn">SUBMIT ANSWER</button>
+        <button id="timer-btn" >TIMER</button>
       </div>
       <footer>Upright Education | Melissa Dufrechou | Copyright 2023 | <a href="/index.html">Home</a></footer>
     </div>
   <!-- Do not change the script source. Allows import/export to work. -->
-    <script src="./scripts/index.js" type="module"></script>
-    <script type="text/javascript">
-      const audio = new Audio();
-      audio.src = "./attributes/jeopardy-theme-song.mp3"
-    </script>
+    
+    <script src="./scripts/final.js" type="module"></script>
+
   </body>
 </html>
