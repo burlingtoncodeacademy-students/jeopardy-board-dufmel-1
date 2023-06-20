@@ -207,12 +207,13 @@ console.log("Condition 1" + roundOneBoardCleared, "Contidion 2" + roundTwoBoardC
     alert("End of Round 1")
    }
     if (
-        roundTwoBoardCleared ||
         playerOneScore >= 30000 ||
         playerTwoScore >= 30000
     ) {
-    finalRoundBtn.disabled = false;
-    
+      finalRoundBtn.disabled = false;
+      alert("End of Round 2")
+    } else if (roundTwoBoardCleared){
+      finalRoundBtn.disabled = false
     }
 }
 
