@@ -3,14 +3,21 @@ import placeholderQuestions from "./placeholder-questions.js";
 console.log({ placeholderQuestions });
 
 
-    let params = new URLSearchParams(window.location.search)
-    //
-    let playerOneName = params.get("nameOne")
-    let playerTwoName = params.get("nameTwo")
-    let playerOneScore = params.get("scoreOne")
-    let playerTwoScore = params.get("scoreTwo")
-    
-    
+let params = new URLSearchParams(window.location.search)
+//
+let playerOneName = params.get("nameOne")
+let playerTwoName = params.get("nameTwo")
+let playerOneScore = params.get("scoreOne")
+let playerTwoScore = params.get("scoreTwo")
+
+//runs once at each html page load. This will set round 1 to 0 and round 2 to the previous rounds value
+let player1Score = document.getElementById("player-1-score");
+let player2Score = document.getElementById("player-2-score");
+
+player1Score.textContent = `${playerOneName}'s Score: ${playerOneScore}`;
+player2Score.textContent = `${playerTwoName}'s Score: ${playerTwoScore}`;
+
+
 //****************ROUND ONE JS****************************/
 
 //Button Set-up
@@ -21,7 +28,8 @@ let finalRoundBtn = document.getElementById("final-round-btn")
 
 guessBtn.disabled = true
 passBtn.disabled = true
-roundTwoBtn.disabled = false
+roundTwoBtn.disabled = true
+finalRoundBtn.disabled = true
 
 //player objects 
 let displayPlayer = document.getElementById("display-player")
@@ -36,47 +44,62 @@ class Player {
 
 //Dictionary of Players will give easy access to players and their properties
 const Players = {
-    player1: new Player(
-        playerOneName,
-        Number(playerOneScore)
-        ),
-        
-    player2: new Player(
-        playerTwoName,
-        Number(playerTwoScore)
-        ),
-            
-    changePlayers (p) {
-        if (p === this.player1){
-            currentPlayer = this.player2;
-            displayPlayer.textContent = `${playerTwoName}'s Turn`;
-                    
-            }else if (p === this.player2)
-            {currentPlayer = this.player1;
-            displayPlayer.textContent = `${playerOneName}'s Turn`
-            }
-    },
-            
-    addPoints(points){
-        return currentPlayer.points += points
-    },
-            
-    subtractPoints(points){
-        return currentPlayer.points -= points
+  player1: new Player(playerOneName, playerOneScore),
+
+  player2: new Player(playerTwoName, playerTwoScore),
+
+  changePlayers(p) {
+    if (p === this.player1) {
+      currentPlayer = this.player2;
+      displayPlayer.textContent = `${playerTwoName}'s Turn`;
+    } else if (p === this.player2) {
+      currentPlayer = this.player1;
+      displayPlayer.textContent = `${playerOneName}'s Turn`;
     }
-}
+  },
+
+  addPoints(points) {
+    if ((currentPlayer === Players.player1)) {
+      playerOneScore = Number(playerOneScore);
+      playerOneScore += points;
+      console.log(playerOneScore);
+      player1Score.textContent = `${playerOneName}'s Score: ${playerOneScore}`;
+    } else if ((currentPlayer === Players.player2)) {
+      playerTwoScore = Number(playerTwoScore);
+      playerTwoScore += points;
+      console.log(playerTwoScore);
+      player2Score.textContent = `${playerTwoName}'s Score: ${playerTwoScore}`;
+    }
+  },
+
+  subtractPoints(points) {
+    if ((currentPlayer === Players.player1)) {
+      playerOneScore = Number(playerOneScore);
+      playerOneScore -= points;
+      console.log(playerOneScore);
+      player1Score.textContent = `${playerOneName}'s Score: ${playerOneScore}`;
+    } else if ((currentPlayer === Players.player2)) {
+      playerTwoScore = Number(playerTwoScore);
+      playerTwoScore -= points;
+      console.log(playerTwoScore);
+      player2Score.textContent = `${playerTwoName}'s Score: ${playerTwoScore}`;
+    }
+  },
+};
         console.log(Players)
         let currentPlayer = Players.player1
-        
 
-        if (currentPlayer = Players.player1){
-            displayPlayer.textContent = `${playerOneName}'s Turn`
-        } else {
-            displayPlayer.textContent = `${playerTwoName}'s Turn`;
-        }
-        
-        
-        //***************Begin Play*******************/
+if (currentPlayer = Players.player1){
+    displayPlayer.textContent = `${playerOneName}'s Turn`
+    } else {
+    displayPlayer.textContent = `${playerTwoName}'s Turn`;
+}
+
+
+// player1Score.textContent = `${playerOneName}'s Score: ${Players.player1.points}`;
+// player2Score.textContent = `${playerTwoName}'s Score: ${Players.player2.points}`;
+
+//Grabbing DOM elements
         
         let nature = document.getElementsByClassName("nature")
         let animal = document.getElementsByClassName("animal")
@@ -84,10 +107,9 @@ const Players = {
         let myth = document.getElementsByClassName("mythology")
         let history = document.getElementsByClassName("history")
         let general = document.getElementsByClassName("general")
-        let card = document.getElementsByClassName("card")
-        let card2 = document.getElementsByClassName("card2")
+        let cards = document.getElementsByClassName("card")
+        let cards2 = document.getElementsByClassName("card2")
         let input = document.getElementById("user-input")
-        let modal = document.getElementById("myModal");
         let cardSelected = false
         
         //Add questions from placeholder questions to array by category
@@ -100,9 +122,6 @@ let historyArray = placeholderQuestions.filter((obj) => obj.category === "Histor
 let generalArray = placeholderQuestions.filter((obj) => obj.category === "General");
 
 
-
-//**************************************www.toptal.com/javascript/10-most-common-javascript-mistakes*****************************************/
-
 //Declaring global array variables to use objects outside of function scope
 
 let answer = []
@@ -114,7 +133,7 @@ let clickedElement = null
 
 
 //REMOVE RANDOM ITEM FROM ARRAY
-
+// Source for code logic: www.toptal.com/javascript/10-most-common-javascript-mistakes
 
 function flipOver(dataArray, elementArray){
 
@@ -127,9 +146,10 @@ function flipOver(dataArray, elementArray){
         possiblePoints.length > 0 ? possiblePoints.pop() : null
         temporaryArray.length > 0 ? temporaryArray.pop() : null
         clickedElement = this
-        console.log(clickedElement)
+        
 
-        if (!cardSelected && clickedElement.textContent !== ""){ // set to false will allow user to select a card
+        if (!cardSelected && clickedElement.textContent !== ""){
+        // set to false will allow user to select a card
         const cardIndex = Array.from(elementArray).indexOf(this)
         currentCard.push(cardIndex)
         console.log(currentCard)
@@ -139,16 +159,17 @@ function flipOver(dataArray, elementArray){
         temporaryArray = dataArray.splice(num, 1)[0]
         console.log(num)
         console.log(temporaryArray)
-        console.log(dataArray.length)
+        
 
         //Uses information from card paramater
         possiblePoints.push(elementArray[cardIndex].innerHTML)
         console.log(possiblePoints)
         
-        
+        //updats text content for selected card with question from temporary array
         elementArray[cardIndex].textContent = temporaryArray.question;
         currentCategory.push(temporaryArray.category)
         console.log(currentCategory)
+        //pushes answer from temporary array to answer array
         answer.push(temporaryArray.answer.toLowerCase())
     
         //new cards can't be selected until either guess or pass buttons are clicked. They can now enabled
@@ -157,8 +178,9 @@ function flipOver(dataArray, elementArray){
         passBtn.disabled = false;
 }}}
 
-
 //Function to handle click on span elements
+//will loop through the array of HTML elements and call the flip over function at the index of the clicked card
+//handle click will take an elementArray(which is an HTML collection) and a dataArray (which are the placeholder arrays by category)
 function handleClick(elementArray, dataArray){
     for (let i = 0; i < elementArray.length; i++){
     elementArray[i].onclick=flipOver(dataArray, elementArray)
@@ -173,32 +195,55 @@ handleClick(myth, mythArray)
 handleClick(history, historyArray)
 handleClick(general, generalArray)
 
+function checkNextRound() {
+cards = [...cards];
+cards2 = [...cards2];
+let roundOneBoardCleared = cards.every((card) => card.textContent === "");
+let roundTwoBoardCleared = cards2.every((card) => card.textContent === "")
+console.log(boardCleared)
+    if (
+        roundOneBoardCleared ||
+        playerOneScore === 15000 ||
+        playerTwoScore === 15000
+    ) {
+    roundTwoBtn.disabled = false;
+   }
+    if (
+        roundTwoBoardCleared ||
+        playerOneScore === 30000 ||
+        playerTwoScore === 30000
+    ) {
+    finalRoundBtn.disabled = false;
+    }
+}
 
-
-let attempts = 0
 //Pass Button Functions
 //Increases attempts so that only the new player has a chance
+let attempts = 0
 
 passBtn.addEventListener("click", (e) => {
     e.preventDefault();
     if (attempts === 1){ 
     passBtn.disabled=true
     guessBtn.disabled=true
-    clearText()}
+    cardSelected=false
+    attempts=0
+    clearText()
+    checkNextRound()}
+    else{
+        attempts++
+    }
 
     console.log(currentPlayer);
     Players.changePlayers(currentPlayer);
     console.log(currentPlayer);
-    attempts++
+    
+    
 });
 
 
 //Guess Button Functions
-let player1Score = document.getElementById("player-1-score")
-let player2Score = document.getElementById("player-2-score")
 
-player1Score.textContent = `${playerOneName}'s Score: ${playerOneScore}`
-player2Score.textContent = `${playerTwoName}'s Score: ${playerTwoScore}`;
 
 
 function clearText(){
@@ -217,7 +262,9 @@ function clearText(){
             if (answer.includes(input.value.toLowerCase())) {
                 Players.addPoints(Number(pointValue));
                 console.log(currentPlayer.points);
+                console.log(playerOneScore, playerTwoScore);
                 clearText();
+                checkNextRound()
                 guessBtn.disabled = true;
                 cardSelected = false;
                 input.value = "";
@@ -228,19 +275,21 @@ function clearText(){
                 attempts++;
                 console.log(attempts);
                 clearText()
+                checkNextRound()
                 guessBtn.disabled = true;
                 cardSelected = false;
             } else if (!answer.includes(input.value.toLowerCase())) {
                 Players.subtractPoints(pointValue);
                 Players.changePlayers(currentPlayer);
-                player1Score.textContent = `Player 1 Score: ${Players.player1.points}`;
-                player2Score.textContent = `Player 2 Score: ${Players.player2.points}`;
+                // player1Score.textContent = `Player 1 Score: ${Players.player1.points}`;
+                // player2Score.textContent = `Player 2 Score: ${Players.player2.points}`;
                 input.value = "";
                 attempts++;
                 console.log(attempts);
             }
             
         })
+
 
         
 
