@@ -96,9 +96,6 @@ if (currentPlayer = Players.player1){
 }
 
 
-// player1Score.textContent = `${playerOneName}'s Score: ${Players.player1.points}`;
-// player2Score.textContent = `${playerTwoName}'s Score: ${Players.player2.points}`;
-
 //Grabbing DOM elements
         
         let nature = document.getElementsByClassName("nature")
@@ -200,20 +197,22 @@ cards = [...cards];
 cards2 = [...cards2];
 let roundOneBoardCleared = cards.every((card) => card.textContent === "");
 let roundTwoBoardCleared = cards2.every((card) => card.textContent === "")
-console.log(boardCleared)
+console.log("Condition 1" + roundOneBoardCleared, "Contidion 2" + roundTwoBoardCleared)
     if (
         roundOneBoardCleared ||
-        playerOneScore === 15000 ||
-        playerTwoScore === 15000
+        playerOneScore >= 15000 ||
+        playerTwoScore >= 15000
     ) {
     roundTwoBtn.disabled = false;
+    alert("End of Round 1")
    }
     if (
         roundTwoBoardCleared ||
-        playerOneScore === 30000 ||
-        playerTwoScore === 30000
+        playerOneScore >= 30000 ||
+        playerTwoScore >= 30000
     ) {
     finalRoundBtn.disabled = false;
+    
     }
 }
 
@@ -266,18 +265,21 @@ function clearText(){
                 clearText();
                 checkNextRound()
                 guessBtn.disabled = true;
+                passBtn.disabled = true;
                 cardSelected = false;
                 input.value = "";
+                attempts = 0
             } else if (!answer.includes(input.value.toLowerCase()) && attempts === 1) {
                 Players.subtractPoints(pointValue);
-                Players.changePlayers(currentPlayer);
                 input.value = "";
-                attempts++;
+                attempts = 0;
                 console.log(attempts);
                 clearText()
                 checkNextRound()
+                passBtn.disabled = true
                 guessBtn.disabled = true;
                 cardSelected = false;
+                
             } else if (!answer.includes(input.value.toLowerCase())) {
                 Players.subtractPoints(pointValue);
                 Players.changePlayers(currentPlayer);
