@@ -4,11 +4,90 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
     <title>Jeopardy</title>
   </head>
   <body>
-    <h1>Round One</h1>
-    <!-- Do not change the script source. Allows import/export to work. -->
-    <script src="./scripts/index.js" type="module"></script>
+        <div class="main-container">
+      <h1>Round One</h1>
+      <h2 id="display-player">PLAYER TURN</h2>
+
+      <div class="jeopardy-board">
+        <div class="column">
+          <span class="category-header nature-category">Nature</span>
+          <span class = "card nature ">200</span>
+          <span class = "card nature">400</span>
+          <span class = "card nature">600</span>
+          <span class = "card nature">800</span>
+          <span class = "card nature">1000</span>
+        </div>
+        <div class="column">
+          <span class="category-header animal-category">Animal</span>
+          <span class="card animal">200</span>
+          <span class="card animal">400</span>
+          <span class="card animal">600</span>
+          <span class="card animal">800</span>
+          <span class="card animal">1000</span>
+        </div>
+        <div class="column">
+          <span class="category-header">Computers</span>
+          <span class = "card computers">200</span>
+          <span class = "card computers">400</span>
+          <span class = "card computers">600</span>
+          <span class = "card computers">800</span>
+          <span class = "card computers">1000</span>
+        </div>
+        <div class="column">
+          <span class="category-header">Mythology</span>
+          <span class = "card mythology">200</span>
+          <span class = "card mythology">400</span>
+          <span class = "card mythology">600</span>
+          <span class = "card mythology">800</span>
+          <span class = "card mythology">1000</span>
+        </div>
+        <div class="column">
+          <span class="category-header">History</span>
+          <span class = "card history">200</span>
+          <span class = "card history">400</span>
+          <span class = "card history">600</span>
+          <span class = "card history">800</span>
+          <span class = "card history">1000</span>
+        </div>
+        <div class="column">
+          <span class="category-header">General</span>
+          <span class = "card general">200</span>
+          <span class = "card general">400</span>
+          <span class = "card general">600</span>
+          <span class = "card general">800</span>
+          <span class = "card general">1000</span>
+        </div>
+      </div>
+
+
+
+<input type="text" placeholder="User Input" id="user-input">
+
+      <div class="button-div">
+        <button id="guess-btn">GUESS</button>
+        <button id="pass-btn" class="">PASS</button>
+      </div>
+
+      <div class="player-score">
+        <h3 id="player-1-score">Player 1 Score: 0</h3>
+        <h3 id="player-2-score">Player 2 Score: 0</h3>
+      </div>
+
+      <div class="next-round-btn">
+        <button id="round-two-btn">Next Round</button>
+      </div>
+
+      <div class="next-round-btn" style="display: none">
+        <button id="final-round-btn">Final Jeopardy</button>
+      </div>
+
+      <footer>Upright Education | Melissa Dufrechou | Copyright 2023 | <a href="/index.html">Home</a></footer>
+    </div> 
+    
+    <script src="./scripts/rounds.js" type="module"></script>
   </body>
 </html>
