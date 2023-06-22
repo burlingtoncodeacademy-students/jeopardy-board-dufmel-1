@@ -7,8 +7,9 @@ let playBtn = document.getElementById("play-btn");
 let playerOneName = document.getElementById("playerOneName");
 let playerTwoName = document.getElementById("playerTwoName");
 
-        //Add questions from placeholder questions to array by category
-        
+//Add questions from placeholder questions to array by category
+//apply JSON.stringify to pass as query parameter
+
 let natureArray=placeholderQuestions.filter((obj) => obj.category === "Nature")
 let natureString = encodeURIComponent(JSON.stringify(natureArray))
 
