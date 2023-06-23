@@ -38,8 +38,8 @@ let finalRoundBtn = document.getElementById("final-round-btn")
 
 guessBtn.disabled = true
 passBtn.disabled = true
-roundTwoBtn.disabled = false
-finalRoundBtn.disabled = false
+roundTwoBtn.disabled = true
+finalRoundBtn.disabled = true
 
 //player objects 
 let displayPlayer = document.getElementById("display-player")
